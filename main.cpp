@@ -103,7 +103,9 @@
 
 int main()
 {
-	const char* FILENAME = "data.txt";
+	// CONSTANTS
+	const char* INPUT_FILENAME = "data.txt";
+	const char* OUTPUT_FILENAME = "data.out";
 	const int MAX_WIDTH = 200;
 
 	// DECLARATIONS
@@ -116,17 +118,19 @@ int main()
 
 	// It takes a text file data.txt as an input file.
 	// OPEN INPUT FILE
-	std::ifstream inputFile(FILENAME);
-
+	std::ifstream inputFile(INPUT_FILENAME);
 
 	// OPEN OUTPUT FILE
+	std::ofstream outputFile(OUTPUT_FILENAME);
+
 	// IF BOTH FILES OPEN THEN
-	if (inputFile.is_open())
+	if (inputFile.is_open() && outputFile.is_open())
 	{
 
-/*DEBUG*/    std::cout << "FILE OPEN\n";
+/*DEBUG*/    std::cout << "FILES OPEN\n";
+/*DEBUG*/    outputFile << "FILES OPEN\n";
 
-		
+
 		// Your program should ask the number of column to the user and format the text file accordingly.
 		// For example, if a user types 65, every line should be aligned 65 long.
 		// DO
@@ -179,12 +183,19 @@ int main()
 		inputFile.close();
 
 		// CLOSE OUTPUT FILE
+		outputFile.close();
 
 	}
 	// ELSE PRINT FILE ERROR
 	else
 	{
-		std::cout << "[FATAL ERROR: 13 (UNABLE TO OPEN FILE)]\n";
+		// CLOSE INPUT FILE
+		inputFile.close();
+
+		// CLOSE OUTPUT FILE
+		outputFile.close();
+
+		std::cout << "[FATAL ERROR: 13 (UNABLE TO OPEN INPUT OR OUTPUT FILE)]\n";
 		return 13;
 	}
 
