@@ -103,6 +103,7 @@
 
 int main()
 {
+	const char* FILENAME = "data.txt";
 	const int MAX_WIDTH = 200;
 
 	// DECLARATIONS
@@ -113,58 +114,79 @@ int main()
 		width = index = 0;
 
 
-	// Your program should ask the number of column to the user and format the text file accordingly.
-	// For example, if a user types 65, every line should be aligned 65 long.
-	// DO
-	do
-	{
-		// PROMPT COLUMN WIDTH 1-200
-		std::cout << "[ENTER THE NUMBER OF COLUMN>  ";
-		std::cin >> width;
-		// WHILE WIDTH < 1 || WIDTH > 200
-	} while (width > MAX_WIDTH || width < 1);
-
 	// It takes a text file data.txt as an input file.
 	// OPEN INPUT FILE
+	std::ifstream inputFile(FILENAME);
+
+
 	// OPEN OUTPUT FILE
 	// IF BOTH FILES OPEN THEN
+	if (inputFile.is_open())
+	{
+
+/*DEBUG*/    std::cout << "FILE OPEN\n";
+
+		
+		// Your program should ask the number of column to the user and format the text file accordingly.
+		// For example, if a user types 65, every line should be aligned 65 long.
+		// DO
+		do
+		{
+			// PROMPT COLUMN WIDTH 1-200
+			std::cout << "[ENTER THE NUMBER OF COLUMN>  ";
+			std::cin >> width;
+
+			// WHILE WIDTH < 1 || WIDTH > 200
+		} while (width > MAX_WIDTH || width < 1);
+
 
 		// WHILE NOT INPUT FILE FAIL
-		// READ NEXT CHAR TO BUFFER CHAR
+		{
+			// READ NEXT CHAR TO BUFFER CHAR
 
-		// 3) There should be no more than one white space between two words.
-		//Multiple spaces, newlines or tabs must be replaced with a space.
-		// SWITCH BUFFER
-		// CASE NEWLINE
-		// CASE TAB
-		// CASE SPACE
-		// IF NOT SPACE FLAG SET THEN
-		// SET SPACE FLAG
-		// PRINT SPACE TO FILE
-		// PRINT SPACE TO CONSOLE
-		// BREAK
-		// DEFAULT
-		// CLEAR SPACE FLAG
-		// For the output, display the formatted text on screen and save it to data.out file.
-		// PRINT BUFFER TO FILE
-		// PRINT BUFFER TO CONSOLE
-		// BREAK
-		// INCREMENT INDEX
+			// 3) There should be no more than one white space between two words.
+			// Multiple spaces, newlines or tabs must be replaced with a space.
+			// SWITCH BUFFER
+			// CASE NEWLINE
+			// CASE TAB
+			// CASE SPACE
+			// IF NOT SPACE FLAG SET THEN
+			// SET SPACE FLAG
+			// PRINT SPACE TO FILE
+			// PRINT SPACE TO CONSOLE
+			// BREAK
+			// DEFAULT
+			// CLEAR SPACE FLAG
+			// For the output, display the formatted text on screen and save it to data.out file.
+			// PRINT BUFFER TO FILE
+			// PRINT BUFFER TO CONSOLE
+			// BREAK
+			// INCREMENT INDEX
 
-		// You can assume that a hyphen can be added after the maximum column.
-		// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
-		// IF INDEX == WIDTH THEN
-		// IF NOT SPACE FLAG SET THEN
-		// PRINT HYPHEN TO FILE
-		// PRINT HYPHEN TO CONSOLE
-		// INDEX = 0
+			// You can assume that a hyphen can be added after the maximum column.
+			// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
+			// IF INDEX == WIDTH THEN
+			// IF NOT SPACE FLAG SET THEN
+			// PRINT HYPHEN TO FILE
+			// PRINT HYPHEN TO CONSOLE
+			// INDEX = 0
 
+		}
 		// END WHILE
 
-		// CLOSE INPUT FILE
-		// CLOSE OUTPUT FILE
-	// ELSE PRINT FILE ERROR
 
+		// CLOSE INPUT FILE
+		inputFile.close();
+
+		// CLOSE OUTPUT FILE
+
+	}
+	// ELSE PRINT FILE ERROR
+	else
+	{
+		std::cout << "[FATAL ERROR: 13 (UNABLE TO OPEN FILE)]\n";
+		return 13;
+	}
 
 	return 0;
 }
