@@ -145,8 +145,12 @@ int main()
 
 
 		// WHILE NOT INPUT FILE FAIL
+		while (!inputFile.fail())
 		{
 			// READ NEXT CHAR TO BUFFER CHAR
+			inputFile.get(buffer);
+
+/*DEBUG*/	std::cout << buffer;
 
 			// 3) There should be no more than one white space between two words.
 			// Multiple spaces, newlines or tabs must be replaced with a space.
