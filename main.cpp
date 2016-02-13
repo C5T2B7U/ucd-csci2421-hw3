@@ -96,7 +96,7 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <cctype> // FOR isspace, isprint
 
 
 
@@ -150,22 +150,17 @@ int main()
 			// READ NEXT CHAR TO BUFFER CHAR
 			inputFile.get(buffer);
 
-///*DEBUG*/	std::cout << buffer;
+///*DEBUG*/	std::cout << buffer;{
 
-			// 3) There should be no more than one white space between two words.
-			// Multiple spaces, newlines or tabs must be replaced with a space.
-			// SWITCH BUFFER
-			switch(buffer)
+			// IF BUFFER CHARACTER CANNOT BE PRINTED THEN SKIP TO NEXT CHARACTER
+			if (std::isprint(buffer))
 			{
-				// CASE NEWLINE
-				case '\n':
 
-				// CASE TAB
-				case '\t':
-
-				// CASE SPACE
-				case ' ':
-
+				// 3) There should be no more than one white space between two words.
+				// Multiple spaces, newlines or tabs must be replaced with a space.
+				// IF ISSPACE(BUFFER)
+				if (std::isspace(buffer))
+				{
 					// IF NOT SPACE FLAG SET THEN
 					if (!spaceFlag)
 					{
@@ -177,14 +172,16 @@ int main()
 
 						// PRINT SPACE TO FILE
 						outputFile << ' ';
+
+						// INCREMENT INDEX
+						++index;
 					}
 
-					// BREAK
-					break;
+					// DO NOT INCREMENT INDEX IF BOTH ISSPACE(BUFFER) AND SPACEFLAG ARE TRUE
 
-				// DEFAULT
-				default:
-
+					// NON-SPACE CHARACTERS WILL RUN THE ELSE SUBROUTINE
+				} else
+				{
 					// CLEAR SPACE FLAG
 					spaceFlag = false;
 
@@ -195,40 +192,41 @@ int main()
 					// PRINT BUFFER TO FILE
 					outputFile << buffer;
 
-					// BREAK
-					break;
-			}
-
-			// INCREMENT INDEX
-			++index;
-
-			// You can assume that a hyphen can be added after the maximum column.
-			// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
-			// IF INDEX == WIDTH THEN
-			if (index == width)
-			{
-				// IF NOT SPACE FLAG SET THEN
-				if (!spaceFlag)
-				{
-					// PRINT HYPHEN TO CONSOLE
-					std::cout << '-';
-
-					// PRINT HYPHEN TO FILE
-					outputFile << '-';
+					// INCREMENT INDEX
+					++index;
 				}
 
-				// PRINT NEWLINE TO CONSOLE
-				std::cout << std::endl;
 
-				// PRINT NEWLINE TO FILE
-				outputFile << std::endl;
+				// You can assume that a hyphen can be added after the maximum column.
+				// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
+				// IF INDEX == WIDTH THEN
+				if (index == width)
+				{
+					// IF NOT SPACE FLAG SET THEN
+					if (!spaceFlag)
+					{
+						// PRINT HYPHEN TO CONSOLE
+						std::cout << '-';
 
-				// INDEX = 0
-				index = 0;
+						// PRINT HYPHEN TO FILE
+						outputFile << '-';
+					}
 
+					// PRINT NEWLINE TO CONSOLE
+					std::cout << std::endl;
+
+					// PRINT NEWLINE TO FILE
+					outputFile << std::endl;
+
+					// INDEX = 0
+					index = 0;
+
+				}
 			}
 
-		// END WHILE
+
+
+			// END WHILE
 		}
 
 
