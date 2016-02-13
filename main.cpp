@@ -101,6 +101,39 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+// ANALYZE PROBLEM: REGULAR CHARACTER THAT ENDS A WORD AT THE END OF A PROCESSED LINE CAUSES HYPEN INSERTION
+// PROJECTED SOLUTION: SECONDARY CHAR VARIABLE OR PEEK
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main()
 {
 	// CONSTANTS
@@ -115,13 +148,25 @@ int main()
 	int width, index;
 		width = index = 0;
 
-
 	// It takes a text file data.txt as an input file.
 	// OPEN INPUT FILE
 	std::ifstream inputFile(INPUT_FILENAME);
 
 	// OPEN OUTPUT FILE
 	std::ofstream outputFile(OUTPUT_FILENAME);
+
+
+///*DEBUG*/	std::cout << "\nALGORITHM VARIABLE BYTES ALLOCATED ON STACK = "
+///*DEBUG*/	 			<< sizeof(spaceFlag) + sizeof(buffer) + sizeof(width) + sizeof(index) << "\n";
+
+///*DEBUG*/	std::cout << "VARIABLE BYTES CORRESPONDING TO FILE OBJECTS = "
+///*DEBUG*/	 			<< sizeof(inputFile) + sizeof(outputFile) << "\n";
+
+///*DEBUG*/	std::cout << "BYTES ALLOCATED TO CONSTANTS = "
+///*DEBUG*/	 			<< sizeof(INPUT_FILENAME) + sizeof(OUTPUT_FILENAME) + sizeof(MAX_WIDTH) << "\n";
+
+///*DEBUG*/	std::cout << "BYTES ALLOCATED ON HEAP = 0\n\n";
+
 
 	// IF BOTH FILES OPEN THEN
 	if (inputFile.is_open() && outputFile.is_open())
