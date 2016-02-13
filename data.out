@@ -1,35 +1,5 @@
 You know, I have one simple request. And that is to have sha-
-rks with frickin' laser beams attached to their heads! Nowev-
-idently, my cycloptic colleague informs me that that can't b-
-e done.Uh, can you remind me what I pay you people for?Hones-
-tly, throw me a bone here. What do we have? Dr. EvilHomework-
- 3Refer to the documenting and submitting homework from here-
-.Using the mystring.h and mystring.cpp, (you're not supposed-
- to use STL string for this homework)1) implement a text fil-
-e formatting program. It takes a text file data.txt as an in-
-put file. The file name can be hard-coded in your program or-
- take a file name as a command line parameter. The file has 
-a few lines of text but the length(column) of the line is ar-
-bitrary. One line could have anywhere between 1 to 200 chara-
-cters before a new line (carriage return). Your program shou-
-ld ask the number of column to the user and format the text 
-file accordingly. For example, if a user types 65, every lin-
-e should be aligned 65 long. You may have to combine two lin-
-es to one to eliminate the white spaces and blank lines, or 
-split one to two.2) in cases you need to change line in the 
-middle of a word, you need to use a hyphen (-) to connect a 
-word between two lines.3) There should be no more than one w-
-hite space between two words. Multiple spaces, newlines or t-
-abs must be replaced with a space.You can assume that a hyph-
-en can be added after the maximum column. So if you're forma-
-tting a text to 60 columns and a word is starting at the 60t-
-h column, you can add hyphen at 61st. Only the hyphen can co-
-me at 61st.For the output, display the formatted text on scr-
-een and save it to data.out file.Hint: read Appendix F for t-
-he file I/O and string handling. You may find eat_white( ) f-
-unction useful for removing white spaces. Read Standard C St-
-ring & Character and use appropriate functions like strcpy, 
-strcat, memcmp etc.Grading guideline Correct and complete fu-
-nctionality 70% Reasonable fault tolerance, i.e. it should n-
-ot crash often. 10% Makefile and Readme 10% Documentation an-
-d comments in the code 10%Due on Feb. 15th at 4PM..
+rks with frickin' laser beams attached to their heads! Now e-
+vidently, my cycloptic colleague informs me that that can't 
+be done. Uh, can you remind me what I pay you people for? Ho-
+nestly, throw me a bone here. What do we have? Dr. Evil  

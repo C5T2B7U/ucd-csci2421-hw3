@@ -152,8 +152,25 @@ int main()
 
 ///*DEBUG*/	std::cout << buffer;{
 
-			// IF BUFFER CHARACTER CANNOT BE PRINTED THEN SKIP TO NEXT CHARACTER
-			if (std::isprint(buffer))
+			// IF BUFFER == NEWLINE
+			if (buffer == '\n')
+			{
+				// SET SPACE FLAG
+				spaceFlag = true;
+
+				// PRINT SPACE TO CONSOLE
+				std::cout << ' ';
+
+				// PRINT SPACE TO FILE
+				outputFile << ' ';
+
+				// INCREMENT INDEX
+				++index;
+			}
+
+
+			// ELSE IF BUFFER CHARACTER CANNOT BE PRINTED THEN SKIP TO NEXT CHARACTER
+			else if (std::isprint(buffer))
 			{
 
 				// 3) There should be no more than one white space between two words.
