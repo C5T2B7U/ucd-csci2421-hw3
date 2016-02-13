@@ -127,8 +127,8 @@ int main()
 	if (inputFile.is_open() && outputFile.is_open())
 	{
 
-/*DEBUG*/    std::cout << "FILES OPEN\n";
-/*DEBUG*/    outputFile << "FILES OPEN\n";
+///*DEBUG*/    std::cout << "FILES OPEN\n";
+///*DEBUG*/    outputFile << "FILES OPEN\n";
 
 
 		// Your program should ask the number of column to the user and format the text file accordingly.
@@ -150,37 +150,86 @@ int main()
 			// READ NEXT CHAR TO BUFFER CHAR
 			inputFile.get(buffer);
 
-/*DEBUG*/	std::cout << buffer;
+///*DEBUG*/	std::cout << buffer;
 
 			// 3) There should be no more than one white space between two words.
 			// Multiple spaces, newlines or tabs must be replaced with a space.
 			// SWITCH BUFFER
-			// CASE NEWLINE
-			// CASE TAB
-			// CASE SPACE
-			// IF NOT SPACE FLAG SET THEN
-			// SET SPACE FLAG
-			// PRINT SPACE TO FILE
-			// PRINT SPACE TO CONSOLE
-			// BREAK
-			// DEFAULT
-			// CLEAR SPACE FLAG
-			// For the output, display the formatted text on screen and save it to data.out file.
-			// PRINT BUFFER TO FILE
-			// PRINT BUFFER TO CONSOLE
-			// BREAK
+			switch(buffer)
+			{
+				// CASE NEWLINE
+				case '\n':
+
+				// CASE TAB
+				case '\t':
+
+				// CASE SPACE
+				case ' ':
+
+					// IF NOT SPACE FLAG SET THEN
+					if (!spaceFlag)
+					{
+						// SET SPACE FLAG
+						spaceFlag = true;
+
+						// PRINT SPACE TO CONSOLE
+						std::cout << ' ';
+
+						// PRINT SPACE TO FILE
+						outputFile << ' ';
+					}
+
+					// BREAK
+					break;
+
+				// DEFAULT
+				default:
+
+					// CLEAR SPACE FLAG
+					spaceFlag = false;
+
+					// For the output, display the formatted text on screen and save it to data.out file.
+					// PRINT BUFFER TO CONSOLE
+					std::cout << buffer;
+
+					// PRINT BUFFER TO FILE
+					outputFile << buffer;
+
+					// BREAK
+					break;
+			}
+
 			// INCREMENT INDEX
+			++index;
 
 			// You can assume that a hyphen can be added after the maximum column.
 			// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
 			// IF INDEX == WIDTH THEN
-			// IF NOT SPACE FLAG SET THEN
-			// PRINT HYPHEN TO FILE
-			// PRINT HYPHEN TO CONSOLE
-			// INDEX = 0
+			if (index == width)
+			{
+				// IF NOT SPACE FLAG SET THEN
+				if (!spaceFlag)
+				{
+					// PRINT HYPHEN TO CONSOLE
+					std::cout << '-';
 
-		}
+					// PRINT HYPHEN TO FILE
+					outputFile << '-';
+				}
+
+				// PRINT NEWLINE TO CONSOLE
+				std::cout << std::endl;
+
+				// PRINT NEWLINE TO FILE
+				outputFile << std::endl;
+
+				// INDEX = 0
+				index = 0;
+
+			}
+
 		// END WHILE
+		}
 
 
 		// CLOSE INPUT FILE
@@ -202,6 +251,8 @@ int main()
 		std::cout << "[FATAL ERROR: 13 (UNABLE TO OPEN INPUT OR OUTPUT FILE)]\n";
 		return 13;
 	}
+
+	// DON'T FORGET TO REDUCE EFFICIENCY BY STORING FILE CHARACTER DATA TO MULTIPLE MYSTRING OBJECTS
 
 	return 0;
 }
