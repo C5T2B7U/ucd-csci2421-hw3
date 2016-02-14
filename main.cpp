@@ -44,54 +44,106 @@
 
 
 
+
+// NEW ALGORITHM
+// THIS ALGORITHM WILL INCORPORATE THE MY_STRING CLASS
+// FIRST AN ANALYSIS OF THE BACKGROUND OF THE PROBLEM
+
+
+
+// CHARACTER TYPES:
+
+// 1. NON-PRINTABLE
+// 2. WHITESPACE
+// 3. VALID CHARACTERS
+
+
+
+// END-OF-LINE SCENARIOS:
+
+// 1. NON-PRINTABLE CHARACTERS
+	// SKIP
+	// DON'T INC
+
+// 2. CHARACTER FIRST, SPACE NEXT
+	// DON'T HYPHENATE
+	// INC
+
+// 3. CHARACTER FIRST, CHARACTER NEXT
+	// HYPHENATE
+	// INC
+
+// 4. SPACE FIRST, CHARACTER NEXT
+	// SAVE NEXT CHARACTER
+	// SET SAVEFLAG
+	// INC
+
+
+
+// NEW ALGORITHM
+
 // Your program should ask the number of column to the user and format the text file accordingly.
 // For example, if a user types 65, every line should be aligned 65 long.
 // DO
 	// PROMPT COLUMN WIDTH 1-200
-	// WHILE WIDTH < 1 || WIDTH > 200
+  // WHILE WIDTH < 1 || WIDTH > 200
 
 // It takes a text file data.txt as an input file.
 // OPEN INPUT FILE
 // OPEN OUTPUT FILE
+
 // IF BOTH FILES OPEN THEN
 
-	// WHILE NOT INPUT FILE FAIL
-		// READ NEXT CHAR TO BUFFER CHAR
+	// WHILE NOT INPUTFILE FAIL
 
-		// 3) There should be no more than one white space between two words.
-		// Multiple spaces, newlines or tabs must be replaced with a space.
-		// SWITCH BUFFER
-			// CASE NEWLINE
-			// CASE TAB
-			// CASE SPACE
-				// IF NOT SPACE FLAG SET THEN
-					// SET SPACE FLAG
-					// PRINT SPACE TO FILE
-					// PRINT SPACE TO CONSOLE
-				// BREAK
-			// DEFAULT
-				// CLEAR SPACE FLAG
-				// For the output, display the formatted text on screen and save it to data.out file.
-				// PRINT BUFFER TO FILE
-				// PRINT BUFFER TO CONSOLE
-				// BREAK
-		// INCREMENT INDEX
+		// MY_STRING NEW STRING
+		// STRING RESERVE(WIDTH)
 
-		// You can assume that a hyphen can be added after the maximum column.
-		// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
-		// IF INDEX == WIDTH THEN
-			// IF NOT SPACE FLAG SET THEN
-				// PRINT HYPHEN TO FILE
-				// PRINT HYPHEN TO CONSOLE
-			// INDEX = 0
+		// NOTE: SAVEFLAG ONLY SETS ON END-OF-LINE CONDITION 4
+		// IF (SAVEFLAG)
+			// STRING += BUFFER
+			// RESET SAVEFLAG
 
-	// END WHILE
+		// WHILE (!FAIL && INDEX < WIDTH)
+
+			// GET BUFFER
+
+			// SKIP NON-PRINTABLE CHARACTERS
+			// IF (ISPRINT BUFFER) THEN
+
+				// IF (ISSPACE BUFFER) THEN
+					// DON'T START LINE WITH SPACE
+					// DON'T REPEAT SPACE
+					// IF (INDEX && !ISSPACE STRING[INDEX-1]) THEN
+						// STRING += SPACE
+						// ++INDEX
+
+				// ELSE (BUFFER IS VALID CHARACTER)
+					// STRING += BUFFER
+					// ++INDEX
+					// IF (INDEX == WIDTH) END-OF-LINE THEN
+						// GET BUFFER
+						// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
+							// INSERT HYPHEN
+							// SET SAVEFLAG
+
+		// ENDWHILE
+
+		// PRINT STRING
+
+	// ENDWHILE
 
 	// CLOSE INPUT FILE
 	// CLOSE OUTPUT FILE
-// ELSE PRINT FILE ERROR
 
-// DON'T FORGET TO REDUCE EFFICIENCY BY STORING FILE CHARACTER DATA TO MULTIPLE MYSTRING OBJECTS
+// ELSE PRINT FILE ERROR
+	// CLOSE INPUT FILE
+	// CLOSE OUTPUT FILE
+	// RETURN ERROR
+
+// RETURN NORMAL
+
+
 
 
 #include <iostream>
@@ -99,37 +151,8 @@
 #include <cctype> // FOR isspace, isprint
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-// ANALYZE PROBLEM: REGULAR CHARACTER THAT ENDS A WORD AT THE END OF A PROCESSED LINE CAUSES HYPEN INSERTION
-// PROJECTED SOLUTION: SECONDARY CHAR VARIABLE OR PEEK
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#include "mystring.h"
+using namespace hw4;
 
 
 
@@ -142,7 +165,7 @@ int main()
 	const int MAX_WIDTH = 200;
 
 	// DECLARATIONS
-	bool spaceFlag = 0;
+	bool saveFlag = 0;
 	char buffer;
 
 	int width, index;
@@ -156,148 +179,18 @@ int main()
 	std::ofstream outputFile(OUTPUT_FILENAME);
 
 
-///*DEBUG*/	std::cout << "\nALGORITHM VARIABLE BYTES ALLOCATED ON STACK = "
-///*DEBUG*/	 			<< sizeof(spaceFlag) + sizeof(buffer) + sizeof(width) + sizeof(index) << "\n";
-
-///*DEBUG*/	std::cout << "VARIABLE BYTES CORRESPONDING TO FILE OBJECTS = "
-///*DEBUG*/	 			<< sizeof(inputFile) + sizeof(outputFile) << "\n";
-
-///*DEBUG*/	std::cout << "BYTES ALLOCATED TO CONSTANTS = "
-///*DEBUG*/	 			<< sizeof(INPUT_FILENAME) + sizeof(OUTPUT_FILENAME) + sizeof(MAX_WIDTH) << "\n";
-
-///*DEBUG*/	std::cout << "BYTES ALLOCATED ON HEAP = 0\n\n";
-
-
 	// IF BOTH FILES OPEN THEN
 	if (inputFile.is_open() && outputFile.is_open())
 	{
 
-///*DEBUG*/    std::cout << "FILES OPEN\n";
-///*DEBUG*/    outputFile << "FILES OPEN\n";
-
-
-		// Your program should ask the number of column to the user and format the text file accordingly.
-		// For example, if a user types 65, every line should be aligned 65 long.
-		// DO
-		do
-		{
-			// PROMPT COLUMN WIDTH 1-200
-			std::cout << "[ENTER THE NUMBER OF COLUMN>  ";
-			std::cin >> width;
-
-			// WHILE WIDTH < 1 || WIDTH > 200
-		} while (width > MAX_WIDTH || width < 1);
-
-
-		// WHILE NOT INPUT FILE FAIL
-		while (!inputFile.fail())
-		{
-			// READ NEXT CHAR TO BUFFER CHAR
-			inputFile.get(buffer);
-
-///*DEBUG*/	std::cout << buffer;{
-
-			// IF BUFFER == NEWLINE
-			if (buffer == '\n')
-			{
-				// SET SPACE FLAG
-				spaceFlag = true;
-
-				// PRINT SPACE TO CONSOLE
-				std::cout << ' ';
-
-				// PRINT SPACE TO FILE
-				outputFile << ' ';
-
-				// INCREMENT INDEX
-				++index;
-			}
-
-
-			// ELSE IF BUFFER CHARACTER CANNOT BE PRINTED THEN SKIP TO NEXT CHARACTER
-			else if (std::isprint(buffer))
-			{
-
-				// 3) There should be no more than one white space between two words.
-				// Multiple spaces, newlines or tabs must be replaced with a space.
-				// IF ISSPACE(BUFFER)
-				if (std::isspace(buffer))
-				{
-					// IF NOT SPACE FLAG SET THEN
-					if (!spaceFlag)
-					{
-						// SET SPACE FLAG
-						spaceFlag = true;
-
-						// PRINT SPACE TO CONSOLE
-						std::cout << ' ';
-
-						// PRINT SPACE TO FILE
-						outputFile << ' ';
-
-						// INCREMENT INDEX
-						++index;
-					}
-
-					// DO NOT INCREMENT INDEX IF BOTH ISSPACE(BUFFER) AND SPACEFLAG ARE TRUE
-
-					// NON-SPACE CHARACTERS WILL RUN THE ELSE SUBROUTINE
-				} else
-				{
-					// CLEAR SPACE FLAG
-					spaceFlag = false;
-
-					// For the output, display the formatted text on screen and save it to data.out file.
-					// PRINT BUFFER TO CONSOLE
-					std::cout << buffer;
-
-					// PRINT BUFFER TO FILE
-					outputFile << buffer;
-
-					// INCREMENT INDEX
-					++index;
-				}
-
-
-				// You can assume that a hyphen can be added after the maximum column.
-				// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
-				// IF INDEX == WIDTH THEN
-				if (index == width)
-				{
-					// IF NOT SPACE FLAG SET THEN
-					if (!spaceFlag)
-					{
-						// PRINT HYPHEN TO CONSOLE
-						std::cout << '-';
-
-						// PRINT HYPHEN TO FILE
-						outputFile << '-';
-					}
-
-					// PRINT NEWLINE TO CONSOLE
-					std::cout << std::endl;
-
-					// PRINT NEWLINE TO FILE
-					outputFile << std::endl;
-
-					// INDEX = 0
-					index = 0;
-
-				}
-			}
-
-
-
-			// END WHILE
-		}
-
+/*DEBUG*/    std::cout << "FILES OPEN\n";
+/*DEBUG*/    outputFile << "FILES OPEN\n";
 
 		// CLOSE INPUT FILE
 		inputFile.close();
 
 		// CLOSE OUTPUT FILE
 		outputFile.close();
-
 	}
 	// ELSE PRINT FILE ERROR
 	else
@@ -312,9 +205,322 @@ int main()
 		return 13;
 	}
 
-	// DON'T FORGET TO REDUCE EFFICIENCY BY STORING FILE CHARACTER DATA TO MULTIPLE MYSTRING OBJECTS
-
 	return 0;
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//// THIS IS THE ORIGINAL ALGORITHM
+//// THE ORIGINAL ALGORITHM DIDN'T INCORPORATE THE MY_STRING CLASS
+//// THEREFORE THE ORIGINAL ALGORITHM WILL BE SCRAPPED
+//
+//
+//// Your program should ask the number of column to the user and format the text file accordingly.
+//// For example, if a user types 65, every line should be aligned 65 long.
+//// DO
+//	// PROMPT COLUMN WIDTH 1-200
+//	// WHILE WIDTH < 1 || WIDTH > 200
+//
+//// It takes a text file data.txt as an input file.
+//// OPEN INPUT FILE
+//// OPEN OUTPUT FILE
+//// IF BOTH FILES OPEN THEN
+//
+//	// WHILE NOT INPUT FILE FAIL
+//		// READ NEXT CHAR TO BUFFER CHAR
+//
+//		// 3) There should be no more than one white space between two words.
+//		// Multiple spaces, newlines or tabs must be replaced with a space.
+//		// SWITCH BUFFER
+//			// CASE NEWLINE
+//			// CASE TAB
+//			// CASE SPACE
+//				// IF NOT SPACE FLAG SET THEN
+//					// SET SPACE FLAG
+//					// PRINT SPACE TO FILE
+//					// PRINT SPACE TO CONSOLE
+//				// BREAK
+//			// DEFAULT
+//				// CLEAR SPACE FLAG
+//				// For the output, display the formatted text on screen and save it to data.out file.
+//				// PRINT BUFFER TO FILE
+//				// PRINT BUFFER TO CONSOLE
+//				// BREAK
+//		// INCREMENT INDEX
+//
+//		// You can assume that a hyphen can be added after the maximum column.
+//		// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
+//		// IF INDEX == WIDTH THEN
+//			// IF NOT SPACE FLAG SET THEN
+//				// PRINT HYPHEN TO FILE
+//				// PRINT HYPHEN TO CONSOLE
+//			// INDEX = 0
+//
+//	// END WHILE
+//
+//	// CLOSE INPUT FILE
+//	// CLOSE OUTPUT FILE
+//// ELSE PRINT FILE ERROR
+//
+//// DON'T FORGET TO REDUCE EFFICIENCY BY STORING FILE CHARACTER DATA TO MULTIPLE MYSTRING OBJECTS
+//
+//
+//#include <iostream>
+//#include <fstream>
+//#include <cctype> // FOR isspace, isprint
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//// ANALYZE PROBLEM: REGULAR CHARACTER THAT ENDS A WORD AT THE END OF A PROCESSED LINE CAUSES HYPEN INSERTION
+//// PROJECTED SOLUTION: SECONDARY CHAR VARIABLE OR PEEK
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//int main()
+//{
+//	// CONSTANTS
+//	const char* INPUT_FILENAME = "data.txt";
+//	const char* OUTPUT_FILENAME = "data.out";
+//	const int MAX_WIDTH = 200;
+//
+//	// DECLARATIONS
+//	bool spaceFlag = 0;
+//	char buffer;
+//
+//	int width, index;
+//		width = index = 0;
+//
+//	// It takes a text file data.txt as an input file.
+//	// OPEN INPUT FILE
+//	std::ifstream inputFile(INPUT_FILENAME);
+//
+//	// OPEN OUTPUT FILE
+//	std::ofstream outputFile(OUTPUT_FILENAME);
+//
+//
+/////*DEBUG*/	std::cout << "\nALGORITHM VARIABLE BYTES ALLOCATED ON STACK = "
+/////*DEBUG*/	 			<< sizeof(spaceFlag) + sizeof(buffer) + sizeof(width) + sizeof(index) << "\n";
+//
+/////*DEBUG*/	std::cout << "VARIABLE BYTES CORRESPONDING TO FILE OBJECTS = "
+/////*DEBUG*/	 			<< sizeof(inputFile) + sizeof(outputFile) << "\n";
+//
+/////*DEBUG*/	std::cout << "BYTES ALLOCATED TO CONSTANTS = "
+/////*DEBUG*/	 			<< sizeof(INPUT_FILENAME) + sizeof(OUTPUT_FILENAME) + sizeof(MAX_WIDTH) << "\n";
+//
+/////*DEBUG*/	std::cout << "BYTES ALLOCATED ON HEAP = 0\n\n";
+//
+//
+//	// IF BOTH FILES OPEN THEN
+//	if (inputFile.is_open() && outputFile.is_open())
+//	{
+//
+/////*DEBUG*/    std::cout << "FILES OPEN\n";
+/////*DEBUG*/    outputFile << "FILES OPEN\n";
+//
+//
+//		// Your program should ask the number of column to the user and format the text file accordingly.
+//		// For example, if a user types 65, every line should be aligned 65 long.
+//		// DO
+//		do
+//		{
+//			// PROMPT COLUMN WIDTH 1-200
+//			std::cout << "[ENTER THE NUMBER OF COLUMN>  ";
+//			std::cin >> width;
+//
+//			// WHILE WIDTH < 1 || WIDTH > 200
+//		} while (width > MAX_WIDTH || width < 1);
+//
+//
+//		// WHILE NOT INPUT FILE FAIL
+//		while (!inputFile.fail())
+//		{
+//			// READ NEXT CHAR TO BUFFER CHAR
+//			inputFile.get(buffer);
+//
+/////*DEBUG*/	std::cout << buffer;{
+//
+//			// IF BUFFER == NEWLINE
+//			if (buffer == '\n')
+//			{
+//				// SET SPACE FLAG
+//				spaceFlag = true;
+//
+//				// PRINT SPACE TO CONSOLE
+//				std::cout << ' ';
+//
+//				// PRINT SPACE TO FILE
+//				outputFile << ' ';
+//
+//				// INCREMENT INDEX
+//				++index;
+//			}
+//
+//
+//			// ELSE IF BUFFER CHARACTER CANNOT BE PRINTED THEN SKIP TO NEXT CHARACTER
+//			else if (std::isprint(buffer))
+//			{
+//
+//				// 3) There should be no more than one white space between two words.
+//				// Multiple spaces, newlines or tabs must be replaced with a space.
+//				// IF ISSPACE(BUFFER)
+//				if (std::isspace(buffer))
+//				{
+//					// IF NOT SPACE FLAG SET THEN
+//					if (!spaceFlag)
+//					{
+//						// SET SPACE FLAG
+//						spaceFlag = true;
+//
+//						// PRINT SPACE TO CONSOLE
+//						std::cout << ' ';
+//
+//						// PRINT SPACE TO FILE
+//						outputFile << ' ';
+//
+//						// INCREMENT INDEX
+//						++index;
+//					}
+//
+//					// DO NOT INCREMENT INDEX IF BOTH ISSPACE(BUFFER) AND SPACEFLAG ARE TRUE
+//
+//					// NON-SPACE CHARACTERS WILL RUN THE ELSE SUBROUTINE
+//				} else
+//				{
+//					// CLEAR SPACE FLAG
+//					spaceFlag = false;
+//
+//					// For the output, display the formatted text on screen and save it to data.out file.
+//					// PRINT BUFFER TO CONSOLE
+//					std::cout << buffer;
+//
+//					// PRINT BUFFER TO FILE
+//					outputFile << buffer;
+//
+//					// INCREMENT INDEX
+//					++index;
+//				}
+//
+//
+//				// You can assume that a hyphen can be added after the maximum column.
+//				// 2) in cases you need to change line in the middle of a word, you need to use a hyphen (-) to connect a word between two lines.
+//				// IF INDEX == WIDTH THEN
+//				if (index == width)
+//				{
+//					// IF NOT SPACE FLAG SET THEN
+//					if (!spaceFlag)
+//					{
+//						// PRINT HYPHEN TO CONSOLE
+//						std::cout << '-';
+//
+//						// PRINT HYPHEN TO FILE
+//						outputFile << '-';
+//					}
+//
+//					// PRINT NEWLINE TO CONSOLE
+//					std::cout << std::endl;
+//
+//					// PRINT NEWLINE TO FILE
+//					outputFile << std::endl;
+//
+//					// INDEX = 0
+//					index = 0;
+//
+//				}
+//			}
+//
+//
+//
+//			// END WHILE
+//		}
+//
+//
+//		// CLOSE INPUT FILE
+//		inputFile.close();
+//
+//		// CLOSE OUTPUT FILE
+//		outputFile.close();
+//
+//	}
+//	// ELSE PRINT FILE ERROR
+//	else
+//	{
+//		// CLOSE INPUT FILE
+//		inputFile.close();
+//
+//		// CLOSE OUTPUT FILE
+//		outputFile.close();
+//
+//		std::cout << "[FATAL ERROR: 13 (UNABLE TO OPEN INPUT OR OUTPUT FILE)]\n";
+//		return 13;
+//	}
+//
+//	// DON'T FORGET TO REDUCE EFFICIENCY BY STORING FILE CHARACTER DATA TO MULTIPLE MYSTRING OBJECTS
+//
+//	return 0;
+//}
+//
+//
