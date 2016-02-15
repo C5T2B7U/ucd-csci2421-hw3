@@ -48,7 +48,6 @@ namespace hw4
 	char my_string::operator[](size_t position) const
 // Library facilities used: assert.h
 	{
-///*DEBUG*/ std::cout << "POSITION = " << position << "     CHAR = " << sequence[position] << "\n";
 		assert(position < current_length);
 		return sequence[position];
 	}
@@ -92,7 +91,6 @@ namespace hw4
 		size_t totalLength;
 
 		totalLength = (current_length + 2);
-/*DEBUG*/    std::cout << "totalLength = " << totalLength << "n";
 		if (allocated < totalLength)
 			reserve(totalLength);
 		strcat(sequence, addstring);
@@ -292,6 +290,9 @@ namespace hw4
 	}
 
 
+
+
+
 // OVERLOADED <<
 	std::ostream &operator<<(std::ostream &os, my_string &source)
 	{
@@ -304,23 +305,25 @@ namespace hw4
 
 				os << (source.operator[](index));
 
+				// ABORT LOOP IF NEWLINE ENCOUNTERED
 				if ((source.operator[](index)) == '\n')
 					index += 55555;
 			}
-///*DEBUG*/ if (!isprint(source.operator[](index))) os << "INVALID CHARACTER SENT TO STREAM\n";
-
 		}
 
 		return os;
 	}
 
 
+
+
 	void my_string::raw_edit(char arg_char, size_t position)
 	{
 		assert(position < current_length);
 		sequence[position] = arg_char;
-///*DEBUG*/	std::cout << "WROTE " << sequence[position] << " AT " << position << "\n";
 	}
+
+
 
 
 }

@@ -126,7 +126,7 @@ void getline(std::istream& ins, my_string& target);
 void eat_white(std::istream& ins, my_string& target);
 
 
-// OVERLOAD <<
+// OVERLOADED <<
 std::ostream& operator <<(std::ostream& os, my_string& source);
 
 }

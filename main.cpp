@@ -148,7 +148,7 @@
 #include <iostream>
 #include <fstream>
 #include <cctype> // FOR isspace, isprint
-#include <cstring> // FOR strncpy;
+#include <cstring> // FOR strncpy
 
 
 #include "mystring.h"
@@ -189,9 +189,6 @@ int main()
 	if (inputFile.is_open() && outputFile.is_open())
 	{
 
-///*DEBUG*/    std::cout << "FILES OPEN\n";
-///*DEBUG*/    outputFile << "FILES OPEN\n";
-
 		// DO
 		do
 		{
@@ -199,7 +196,7 @@ int main()
 			std::cout << "[ENTER THE NUMBER OF COLUMN>  ";
 			std::cin >> width;
 
-			// WHILE WIDTH < 1 || WIDTH > 200
+		// WHILE WIDTH < 1 || WIDTH > 200
 		} while (width > MAX_WIDTH || width < 1);
 
 
@@ -208,21 +205,24 @@ int main()
 		{
 
 			// MY_STRING NEW STRING
-			typedef my_string * ptr_my_string;
-
-			char * giddyup_horsie;
-			giddyup_horsie = new char[width + 2];
-			std::strncpy(giddyup_horsie, MAX_WIDTH_SPACES, (width + 2));
-
-			ptr_my_string outputLine = new my_string(giddyup_horsie);
-
 			// STRING RESERVE(WIDTH)
 			// PREVENT FAILURE WITH RESERVE(WIDTH + 2)
+			// NOTE: RESERVE() IS NOT WORKING!!! IT SETS CURRENT_LENGTH = 0
 
+			typedef my_string * ptr_my_string;
 
+			// ALLOCATE MY_STRING OBJECT OF CORRECT LENGTH
+			char * giddyup_horsie;
+			giddyup_horsie = new char[width + 2];
+
+			// SET TEMPORARY STRING TO CORRECT LENGTH
+			std::strncpy(giddyup_horsie, MAX_WIDTH_SPACES, (width + 2));
+
+			// CONSTRUCT MY_STRING OBJECT WITH TEMPORARY STRING
+			ptr_my_string outputLine = new my_string(giddyup_horsie);
+
+			// DEALLOCATE TEMPORARY STRING
 			delete [] giddyup_horsie;
-
-//			fullLine = false;
 
 
 			// NOTE: SAVEFLAG ONLY SETS ON END-OF-LINE CONDITION 4
@@ -246,6 +246,8 @@ int main()
 				// GET BUFFER
 				inputFile.get(buffer);
 
+				// IT TURNS OUT C++ DOESN'T CONSIDER '\n' TO BE A PRINTABLE CHARACTER
+				// LET'S FIX THIS
 				if (buffer == '\n')
 				{
 					buffer = ' ';
@@ -275,7 +277,6 @@ int main()
 					// ELSE (BUFFER IS VALID CHARACTER)
 					else
 					{
-
 						// STRING += BUFFER
 						outputLine->raw_edit(buffer, index);
 
@@ -283,69 +284,55 @@ int main()
 						++index;
 					}
 
-						// IF (INDEX == WIDTH) END-OF-LINE THEN
-						if (index == width)
+					// IF (INDEX == WIDTH) END-OF-LINE THEN
+					if (index == width)
+					{
+
+						// GET BUFFER
+						inputFile.get(buffer);
+
+
+						// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
+						//if (std::isprint(buffer))
+						if (!std::isspace(buffer) && (!std::isspace(outputLine->operator[](index - 1))))
 						{
+							// INSERT HYPHEN
+							// DO NOT USE INSERT() WHICH CALLS UNNECESSARY RESERVE()
+							outputLine->raw_edit('-', index);
 
-//							fullLine == true;
+							// SET SAVEFLAG
+							saveFlag = true;
 
-							// GET BUFFER
-							inputFile.get(buffer);
-
-
-							// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
-							//if (std::isprint(buffer))
-							if (!std::isspace(buffer) && (!std::isspace(outputLine->operator[](index - 1))))
-							{
-///*DEBUG*/	std::cout << " INSERT HYPHEN\n";
-								// INSERT HYPHEN
-								// DO NOT USE INSERT() WHICH CALLS UNNECESSARY RESERVE()
-								outputLine->raw_edit('-', index);
-
-								// SET SAVEFLAG
-								saveFlag = true;
-
-								// ++INDEX
-								++index;
-							}
-								else if (std::isprint(buffer) && !std::isspace(buffer))
-							{
-								saveFlag = true;
-							}
-
-
-							// INSERT NEWLINE
-							outputLine->raw_edit('\n', index);
-
+							// ++INDEX
+							++index;
 						}
+						// DON'T LOSE BUFFER
+						else if (std::isprint(buffer) && !std::isspace(buffer))
+						{
+							saveFlag = true;
+						}
+
+
+						// INSERT NEWLINE
+						outputLine->raw_edit('\n', index);
+
+					}
 				}
 
 			// ENDWHILE
 			}
 
-//
-//			if (!fullLine)
-//			{
-//				while (index < width)
-//				{
-//					outputLine->raw_edit(char(17), index+3);
-//					++index;
-//				}
-//			}
-
 
 			// RESET INDEX = 0
 			index = 0;
 
-			// PRINT STRING
-///*DEBUG*/	std::cout << "PRINT LINE SEQUENCE WITH LENGTH = " << outputLine->length() << "\n";
 
+			// PRINT STRING
 			std::cout << *outputLine;
 			outputFile << *outputLine;
 
 
 			// DELETE STRING
-///*DEBUG*/	std::cout << "DELETING STRING OBJECT\n";
 			delete outputLine;
 
 		// ENDWHILE
