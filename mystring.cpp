@@ -297,14 +297,16 @@ namespace hw4
 	{
 		size_t index;
 
-///*DEBUG*/    std::cout << "SOURCE LENGTH = " << source.length() << "\n";
-
 		for (index = 0; index < source.length(); ++index)
 		{
-///*DEBUG*/    std::cout << "SOURCE = " << source.operator[](index) << "\n";
 			if (std::isprint(source.operator[](index)) || source.operator[](index) == '\n')
+			{
+
 				os << (source.operator[](index));
 
+				if ((source.operator[](index)) == '\n')
+					index += 55555;
+			}
 ///*DEBUG*/ if (!isprint(source.operator[](index))) os << "INVALID CHARACTER SENT TO STREAM\n";
 
 		}

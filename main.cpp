@@ -164,9 +164,10 @@ int main()
 	const char* OUTPUT_FILENAME = "data.out";
 	const size_t MAX_WIDTH = 200;
 	const char MAX_WIDTH_SPACES[] =
-//		"                                                                                                                                                                                                        ";
+	//	"                                                                                                                                                                                                        ";
 		// USE NON-PRINTABLE CHARACTERS INSTEAD OF SPACES
 		"€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€";
+
 	// DECLARATIONS
 	bool saveFlag = false;
 
@@ -201,13 +202,11 @@ int main()
 			// WHILE WIDTH < 1 || WIDTH > 200
 		} while (width > MAX_WIDTH || width < 1);
 
-//		--width;
-
 
 		// WHILE NOT INPUTFILE FAIL
 		while (!inputFile.fail())
 		{
-///*DEBUG*/    std::cout << "BEGIN WHILE\n";
+
 			// MY_STRING NEW STRING
 			typedef my_string * ptr_my_string;
 
@@ -217,20 +216,13 @@ int main()
 
 			ptr_my_string outputLine = new my_string(giddyup_horsie);
 
-///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
-
 			// STRING RESERVE(WIDTH)
-			// PREVENT FAILURE WITH RESERVE(WIDTH + 3)
-//			outputLine->reserve(33);
+			// PREVENT FAILURE WITH RESERVE(WIDTH + 2)
 
-
-///*DEBUG*/	std::cout << "DELETING HORSIE" << "\n";
 
 			delete [] giddyup_horsie;
 
-///*DEBUG*/	std::cout << "DELETED HORSIE" << "\n";
-
-///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
+//			fullLine = false;
 
 
 			// NOTE: SAVEFLAG ONLY SETS ON END-OF-LINE CONDITION 4
@@ -247,19 +239,12 @@ int main()
 				index = 1;
 			}
 
-///*DEBUG*/	std::cout << "LENGTH BEFORE WHILE3 = " << outputLine->length() << "\n";
-
 			// WHILE (!FAIL && INDEX < WIDTH)
 			while (!inputFile.fail() && index < width)
 			{
 
-
-///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
-
 				// GET BUFFER
 				inputFile.get(buffer);
-
-///*DEBUG*/	std::cout << buffer /*"GET = " << buffer << "\n"*/;
 
 				if (buffer == '\n')
 				{
@@ -270,13 +255,10 @@ int main()
 				// IF (ISPRINT BUFFER) THEN
 				if (std::isprint(buffer))
 				{
-
-///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
 					// IF (ISSPACE BUFFER) THEN
 					if (std::isspace(buffer))
 					{
 
-///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
 						// DON'T START LINE WITH SPACE
 						// DON'T REPEAT SPACE
 						// IF (INDEX && !ISSPACE STRING[INDEX-1]) THEN
@@ -305,29 +287,17 @@ int main()
 						if (index == width)
 						{
 
-///*DEBUG*/	std::cout << "END OF LINE\n";
+//							fullLine == true;
 
+							// GET BUFFER
+							inputFile.get(buffer);
 
-							//do
-							//{
-
-								// GET BUFFER
-//							if (!std::isspace(buffer))
-								inputFile.get(buffer);
-
-							//} while (!isprint(buffer));
-
-//							if (std::isspace(buffer))
-//							{
-////								++index;
-//								std::cout << "###";
-//							}
 
 							// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
 							//if (std::isprint(buffer))
 							if (!std::isspace(buffer) && (!std::isspace(outputLine->operator[](index - 1))))
 							{
-///*DEBUG*/	std::cout << "INSERT HYPHEN\n";
+///*DEBUG*/	std::cout << " INSERT HYPHEN\n";
 								// INSERT HYPHEN
 								// DO NOT USE INSERT() WHICH CALLS UNNECESSARY RESERVE()
 								outputLine->raw_edit('-', index);
@@ -338,7 +308,7 @@ int main()
 								// ++INDEX
 								++index;
 							}
-							else if (std::isprint(buffer) && !std::isspace(buffer))
+								else if (std::isprint(buffer) && !std::isspace(buffer))
 							{
 								saveFlag = true;
 							}
@@ -346,12 +316,22 @@ int main()
 
 							// INSERT NEWLINE
 							outputLine->raw_edit('\n', index);
+
 						}
-
-
 				}
+
 			// ENDWHILE
 			}
+
+//
+//			if (!fullLine)
+//			{
+//				while (index < width)
+//				{
+//					outputLine->raw_edit(char(17), index+3);
+//					++index;
+//				}
+//			}
 
 
 			// RESET INDEX = 0
