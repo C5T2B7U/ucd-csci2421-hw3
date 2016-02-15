@@ -82,17 +82,14 @@
 
 // NEW ALGORITHM
 
-// Your program should ask the number of column to the user and format the text file accordingly.
-// For example, if a user types 65, every line should be aligned 65 long.
-// DO
-	// PROMPT COLUMN WIDTH 1-200
-  // WHILE WIDTH < 1 || WIDTH > 200
-
-// It takes a text file data.txt as an input file.
 // OPEN INPUT FILE
 // OPEN OUTPUT FILE
 
 // IF BOTH FILES OPEN THEN
+
+	// DO
+			// PROMPT COLUMN WIDTH 1-200
+		// WHILE WIDTH < 1 || WIDTH > 200
 
 	// WHILE NOT INPUTFILE FAIL
 
@@ -123,6 +120,7 @@
 					// ++INDEX
 					// IF (INDEX == WIDTH) END-OF-LINE THEN
 						// GET BUFFER
+						// RESET INDEX = 0
 						// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
 							// INSERT HYPHEN
 							// SET SAVEFLAG
@@ -130,6 +128,7 @@
 		// ENDWHILE
 
 		// PRINT STRING
+		// DELETE STRING
 
 	// ENDWHILE
 
@@ -183,14 +182,92 @@ int main()
 	if (inputFile.is_open() && outputFile.is_open())
 	{
 
-/*DEBUG*/    std::cout << "FILES OPEN\n";
-/*DEBUG*/    outputFile << "FILES OPEN\n";
+///*DEBUG*/    std::cout << "FILES OPEN\n";
+///*DEBUG*/    outputFile << "FILES OPEN\n";
+
+		// DO
+		do
+		{
+			// PROMPT COLUMN WIDTH 1-200
+			std::cout << "[ENTER THE NUMBER OF COLUMN>  ";
+			std::cin >> width;
+
+			// WHILE WIDTH < 1 || WIDTH > 200
+		} while (width > MAX_WIDTH || width < 1);
+
+
+		// WHILE NOT INPUTFILE FAIL
+		while (!inputFile.fail())
+		{
+
+			// MY_STRING NEW STRING
+			typedef my_string * ptr_my_string;
+
+			ptr_my_string outputLine = new my_string;
+
+			// STRING RESERVE(WIDTH)
+			outputLine->reserve(width);
+
+			// NOTE: SAVEFLAG ONLY SETS ON END-OF-LINE CONDITION 4
+			// IF (SAVEFLAG)
+				// STRING += BUFFER
+				// RESET SAVEFLAG
+
+			// WHILE (!FAIL && INDEX < WIDTH)
+			while (!inputFile.fail() && index < width)
+			{
+
+				// GET BUFFER
+				inputFile.get(buffer);
+
+				// SKIP NON-PRINTABLE CHARACTERS
+				// IF (ISPRINT BUFFER) THEN
+				if (std::isprint(buffer))
+				{
+
+					// IF (ISSPACE BUFFER) THEN
+					if (std::isspace(buffer))
+					{
+
+						// DON'T START LINE WITH SPACE
+						// DON'T REPEAT SPACE
+						// IF (INDEX && !ISSPACE STRING[INDEX-1]) THEN
+						if (index && !std::isspace(outputLine->operator[](index - 1))) {}
+							// STRING += SPACE
+							// ++INDEX
+
+					}
+					// ELSE (BUFFER IS VALID CHARACTER)
+					// STRING += BUFFER
+					// ++INDEX
+					// IF (INDEX == WIDTH) END-OF-LINE THEN
+					// GET BUFFER
+					// RESET INDEX = 0
+					// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
+					// INSERT HYPHEN
+					// SET SAVEFLAG
+
+				}
+			// ENDWHILE
+			}
+
+
+			// PRINT STRING
+/*DEBUG*/	std::cout << "PRINT LINE SEQUENCE\n";
+
+			// DELETE STRING
+			delete outputLine;
+
+		// ENDWHILE
+		}
+
 
 		// CLOSE INPUT FILE
 		inputFile.close();
 
 		// CLOSE OUTPUT FILE
 		outputFile.close();
+
 	}
 	// ELSE PRINT FILE ERROR
 	else
@@ -201,10 +278,13 @@ int main()
 		// CLOSE OUTPUT FILE
 		outputFile.close();
 
+		// RETURN ERROR
 		std::cout << "[FATAL ERROR: 13 (UNABLE TO OPEN INPUT OR OUTPUT FILE)]\n";
 		return 13;
 	}
 
+
+	// RETURN NORMAL
 	return 0;
 }
 
@@ -308,30 +388,8 @@ int main()
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //// ANALYZE PROBLEM: REGULAR CHARACTER THAT ENDS A WORD AT THE END OF A PROCESSED LINE CAUSES HYPEN INSERTION
 //// PROJECTED SOLUTION: SECONDARY CHAR VARIABLE OR PEEK
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
