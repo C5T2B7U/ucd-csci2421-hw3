@@ -101,6 +101,7 @@ class my_string
   void reserve(size_t n);
   void operator =(const my_string& source);
   void insert(size_t n);
+  void raw_edit(char arg_char, size_t position);
   // CONSTANT MEMBER FUNCTIONS
   size_t length( ) const { return current_length; }
   char operator [ ](size_t position) const;
@@ -123,6 +124,10 @@ my_string operator +(const my_string& s1, const my_string& s2);
 std::istream& operator >>(std::istream& ins, my_string& target);
 void getline(std::istream& ins, my_string& target);
 void eat_white(std::istream& ins, my_string& target);
+
+
+// OVERLOAD <<
+std::ostream& operator <<(std::ostream& os, my_string& source);
 
 }
 

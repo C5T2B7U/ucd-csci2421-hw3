@@ -148,6 +148,7 @@
 #include <iostream>
 #include <fstream>
 #include <cctype> // FOR isspace, isprint
+#include <cstring> // FOR strncpy;
 
 
 #include "mystring.h"
@@ -161,14 +162,19 @@ int main()
 	// CONSTANTS
 	const char* INPUT_FILENAME = "data.txt";
 	const char* OUTPUT_FILENAME = "data.out";
-	const int MAX_WIDTH = 200;
-
+	const size_t MAX_WIDTH = 200;
+	const char MAX_WIDTH_SPACES[] =
+//		"                                                                                                                                                                                                        ";
+		// USE NON-PRINTABLE CHARACTERS INSTEAD OF SPACES
+		"€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€";
 	// DECLARATIONS
-	bool saveFlag = 0;
+	bool saveFlag = false;
+
 	char buffer;
 
-	int width, index;
-		width = index = 0;
+	size_t width, index;
+		width = 30;
+		index = 0;
 
 	// It takes a text file data.txt as an input file.
 	// OPEN INPUT FILE
@@ -195,67 +201,171 @@ int main()
 			// WHILE WIDTH < 1 || WIDTH > 200
 		} while (width > MAX_WIDTH || width < 1);
 
+//		--width;
+
 
 		// WHILE NOT INPUTFILE FAIL
 		while (!inputFile.fail())
 		{
-
+///*DEBUG*/    std::cout << "BEGIN WHILE\n";
 			// MY_STRING NEW STRING
 			typedef my_string * ptr_my_string;
 
-			ptr_my_string outputLine = new my_string;
+			char * giddyup_horsie;
+			giddyup_horsie = new char[width + 2];
+			std::strncpy(giddyup_horsie, MAX_WIDTH_SPACES, (width + 2));
+
+			ptr_my_string outputLine = new my_string(giddyup_horsie);
+
+///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
 
 			// STRING RESERVE(WIDTH)
-			outputLine->reserve(width);
+			// PREVENT FAILURE WITH RESERVE(WIDTH + 3)
+//			outputLine->reserve(33);
+
+
+///*DEBUG*/	std::cout << "DELETING HORSIE" << "\n";
+
+			delete [] giddyup_horsie;
+
+///*DEBUG*/	std::cout << "DELETED HORSIE" << "\n";
+
+///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
+
 
 			// NOTE: SAVEFLAG ONLY SETS ON END-OF-LINE CONDITION 4
 			// IF (SAVEFLAG)
+			if (saveFlag)
+			{
 				// STRING += BUFFER
+				outputLine->raw_edit(buffer, 0);
+
 				// RESET SAVEFLAG
+				saveFlag = false;
+
+				// INDEX = 1
+				index = 1;
+			}
+
+///*DEBUG*/	std::cout << "LENGTH BEFORE WHILE3 = " << outputLine->length() << "\n";
 
 			// WHILE (!FAIL && INDEX < WIDTH)
 			while (!inputFile.fail() && index < width)
 			{
 
+
+///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
+
 				// GET BUFFER
 				inputFile.get(buffer);
+
+///*DEBUG*/	std::cout << buffer /*"GET = " << buffer << "\n"*/;
+
+				if (buffer == '\n')
+				{
+					buffer = ' ';
+				}
 
 				// SKIP NON-PRINTABLE CHARACTERS
 				// IF (ISPRINT BUFFER) THEN
 				if (std::isprint(buffer))
 				{
 
+///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
 					// IF (ISSPACE BUFFER) THEN
 					if (std::isspace(buffer))
 					{
 
+///*DEBUG*/	std::cout << "LENGTH = " << outputLine->length() << "\n";
 						// DON'T START LINE WITH SPACE
 						// DON'T REPEAT SPACE
 						// IF (INDEX && !ISSPACE STRING[INDEX-1]) THEN
-						if (index && !std::isspace(outputLine->operator[](index - 1))) {}
+						if (index != 0 && !std::isspace(outputLine->operator[](index - 1)))
+						{
 							// STRING += SPACE
+							outputLine->raw_edit(' ',index);
+
 							// ++INDEX
+							++index;
+						}
 
 					}
 					// ELSE (BUFFER IS VALID CHARACTER)
-					// STRING += BUFFER
-					// ++INDEX
-					// IF (INDEX == WIDTH) END-OF-LINE THEN
-					// GET BUFFER
-					// RESET INDEX = 0
-					// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
-					// INSERT HYPHEN
-					// SET SAVEFLAG
+					else
+					{
+
+						// STRING += BUFFER
+						outputLine->raw_edit(buffer, index);
+
+						// ++INDEX
+						++index;
+					}
+
+						// IF (INDEX == WIDTH) END-OF-LINE THEN
+						if (index == width)
+						{
+
+///*DEBUG*/	std::cout << "END OF LINE\n";
+
+
+							//do
+							//{
+
+								// GET BUFFER
+//							if (!std::isspace(buffer))
+								inputFile.get(buffer);
+
+							//} while (!isprint(buffer));
+
+//							if (std::isspace(buffer))
+//							{
+////								++index;
+//								std::cout << "###";
+//							}
+
+							// IF (ISPRINT BUFFER && !ISSPACE BUFFER) THEN
+							//if (std::isprint(buffer))
+							if (!std::isspace(buffer) && (!std::isspace(outputLine->operator[](index - 1))))
+							{
+///*DEBUG*/	std::cout << "INSERT HYPHEN\n";
+								// INSERT HYPHEN
+								// DO NOT USE INSERT() WHICH CALLS UNNECESSARY RESERVE()
+								outputLine->raw_edit('-', index);
+
+								// SET SAVEFLAG
+								saveFlag = true;
+
+								// ++INDEX
+								++index;
+							}
+							else if (std::isprint(buffer) && !std::isspace(buffer))
+							{
+								saveFlag = true;
+							}
+
+
+							// INSERT NEWLINE
+							outputLine->raw_edit('\n', index);
+						}
+
 
 				}
 			// ENDWHILE
 			}
 
 
+			// RESET INDEX = 0
+			index = 0;
+
 			// PRINT STRING
-/*DEBUG*/	std::cout << "PRINT LINE SEQUENCE\n";
+///*DEBUG*/	std::cout << "PRINT LINE SEQUENCE WITH LENGTH = " << outputLine->length() << "\n";
+
+			std::cout << *outputLine;
+			outputFile << *outputLine;
+
 
 			// DELETE STRING
+///*DEBUG*/	std::cout << "DELETING STRING OBJECT\n";
 			delete outputLine;
 
 		// ENDWHILE
